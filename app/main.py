@@ -80,6 +80,7 @@ for i, item_raw in enumerate(items_raw, 1):
     # Enrich item with details, download pdf and perform ocr,
     # extract text from pdf and summarize. Whenever something goes wrong,
     # set status to ERROR and add error message and go to next item.
+    pdf_tmp_path = None
     try:
         item.update(su.enrich_item_from_detail_page(item_raw))
         pdf_url = item["pdf_url"]
@@ -109,7 +110,7 @@ for i, item_raw in enumerate(items_raw, 1):
         )
     finally:
         # Delete pdf from tmp directory in any case.
-        if pdf_tmp_path.exists():
+        if pdf_tmp_path and pdf_tmp_path.exists():
             pdf_tmp_path.unlink()
 
         # Update result file every 25 items.

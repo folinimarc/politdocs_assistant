@@ -111,7 +111,7 @@ def enrich_item_from_detail_page(item_raw: dict) -> dict:
 
     # Get PDF url, which is the href attribut of a download button element.
     pdf_url = (
-        gu.get_soup(item_url)
+        gu.get_url_root(item_url)
         + soup.find(
             lambda tag: tag.has_attr("href")
             and "_doc" in tag["href"]
