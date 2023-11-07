@@ -1,0 +1,19 @@
+# Do not distribute secret environment file
+.env.secret
+# Do not commit any logs or development data
+**/*.log
+dev/
+# Ignore MacOS shenanigans
+**/.DS_Store
+# Do not commit .vscode settings
+.vscode
+# Do not commit anything in the development data folder
+**/public_mount/*
+# Ignore pytest coverage file
+**/.coverage
+
+# GITHUB TEMPLATE:
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class

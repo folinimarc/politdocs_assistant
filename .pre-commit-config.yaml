@@ -1,0 +1,54 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-added-large-files
+        args: ['--maxkb=500']
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-merge-conflict
+    -   id: check-json
+    -   id: check-toml
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: fix-encoding-pragma
+    -   id: mixed-line-ending
+    -   id: name-tests-test
+    # -   id: no-commit-to-branch
+    #     args: ['--branch', 'main']
+    -   id: pretty-format-json
+        args: ['--autofix']
+    -   id: trailing-whitespace
+
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
+
+-   repo: local
+    hooks:
+    -   id: check-debug
+        name: Check for occurences of word DEBUG
+        entry: hooks/check_debug.sh
+        args: ["--exclude-files=check_debug.sh,.pre-commit-config.yaml", "--exclude-dirs=.git"]
+        language: script
+        pass_filenames: false
+
+# -   repo: local
+#     hooks:
+#     -   id: run-tests
+#         name: run-tests
+#         entry: pytest
+#         language: system
+#         types: [python]
+#         pass_filenames: false
+#         always_run: true
+
+# -   repo: local
+#     hooks:
+#     -   id: test-coverage-must-not-drecrease
+#         name: test-coverage-must-not-drecrease
+#         entry: ./hooks/check_coverage.sh
+#         args: ["./hooks/current_test_coverage_percentage.txt"]
+#         language: script
+#         pass_filenames: false

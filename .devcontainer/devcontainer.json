@@ -1,0 +1,47 @@
+{
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile",
+    "target": "dev"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-vscode.live-server",
+        "mathematic.vscode-pdf",
+        "github.copilot",
+        "hediet.vscode-drawio",
+        "ms-azuretools.vscode-docker",
+        "njpwerner.autodocstring"
+      ],
+      "settings": {
+        "[python]": {
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+          },
+          "editor.formatOnSave": true
+        },
+        "files.insertFinalNewline": true,
+        "isort.args": [
+          "--profile",
+          "black"
+        ],
+        "python.formatting.blackArgs": [
+          "--line-length=120"
+        ],
+        "python.formatting.provider": "black",
+        "python.interpreterPath": "/opt/poetry-venv/bin/python",
+        "python.pythonPath": "/opt/poetry-venv/bin/python"
+      }
+    }
+  },
+  "name": "DevContainer (python, poetry)",
+  "postCreateCommand": "pre-commit install",
+  "runArgs": [
+    "--env-file",
+    "./.env.public",
+    "--env-file",
+    "./.env.secret"
+  ]
+}

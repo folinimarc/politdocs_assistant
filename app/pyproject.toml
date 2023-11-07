@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "politdocs_assistant"
+version = "0.1.0"
+description = ""
+authors = ["laiskasiili <marc.folini@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.*"
+openai = "1.1.*"
+pypdf = "3.12.*"
+beautifulsoup4 = "4.12.*"
+ocrmypdf = "15.3.*"
+thefuzz = {extras = ["speedup"], version = "0.20.*"}
+
+[tool.poetry.group.dev.dependencies]
+black = "23.7.*"
+isort = "5.12.*"
+pytest = "7.4.*"
+pytest-cov = "4.1.*"
+pre-commit = "3.3.*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
