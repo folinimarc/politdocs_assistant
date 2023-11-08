@@ -31,7 +31,7 @@ $(document).ready(function () {
             dataSrc: function(json) {
                 // Update asof dom element with asof attribute from data.json. Then
                 // pass data attribute along for datatables to display.
-                document.querySelector("#asof").textContent = json.asof
+                document.querySelector("#asof").textContent = json.processed_asof
                 return json.data
             }
         },

@@ -31,7 +31,7 @@ $(document).ready(function () {
             dataSrc: function(json) {
                 // Update asof and version dom elements with json top level data.
                 // Then pass data attribute along for datatables to display.
-                document.querySelector("#asof").textContent = json.asof
+                document.querySelector("#asof").textContent = json.processed_asof
                 document.querySelector("#version").textContent = json.version
                 return json.data
             }

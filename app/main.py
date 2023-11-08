@@ -130,13 +130,13 @@ result_dict_slim = {
     "processed_asof": result_dict["processed_asof"],
     "version": result_dict["version"],
     "data": [
-        {k: v for k, v in item_dict.items() if k is not "pdf_text"}
+        {k: v for k, v in item_dict.items() if k != "pdf_text"}
         for item_dict in result_dict["data"]
     ],
 }
 gu.write_json(result_dict_slim, frontend_directory / "items_slim.json")
 shutil.copytree(
-    Path("./static_website_templares"), frontend_directory, dirs_exist_ok=True
+    Path("./static_website_templates"), frontend_directory, dirs_exist_ok=True
 )
 
 logger.info("Done.")
