@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from init_utils import create_directory, get_default_logger
 import generic_utils as gu
 import schlieren_utils as su
 
@@ -7,14 +6,14 @@ import traceback
 from pathlib import Path
 import os
 import datetime
-import json
 import shutil
 
 # Constants
 table_url = "https://www.schlieren.ch/politbusiness"
 data_directory = Path("../dev/data")
-out_file = data_directory / "items.json"
 pdf_tmp_directory = data_directory / "pdf"
+frontend_directory = Path("../dev/frontend")
+result_json = data_directory / "items.json"
 
 # Setup
 logger = gu.get_default_file_and_stream_logger("politdocs", data_directory)
@@ -34,9 +33,9 @@ result_dict = {
 }
 
 # Create backup of previous run, so we (hopefully) never lose data.
-logger.info(f"Creating backup of previous run at {out_file.absolute()}.json.bak")
-if out_file.exists():
-    shutil.copy(out_file, out_file.with_suffix(".json.bak"))
+logger.info(f"Creating backup of previous run at {result_json.absolute().parent}")
+if result_json.exists():
+    shutil.copy(result_json, result_json.with_suffix(".json.bak"))
 
 # Processing
 logger.info(f"Fetching data from {table_url}.")
@@ -48,7 +47,7 @@ items_raw = su.extract_items(table_soup, table_root_url)
 su.add_response_links_inplace(items_raw)
 
 logger.info(f"Load file from previous runs if it exists to avoid redundant work.")
-prev_run = gu.get_previous_run_json_as_id_dict(out_file)
+prev_run = gu.get_previous_run_json_as_id_dict(result_json)
 
 logger.info(f"Processing {len(items_raw)} items...")
 for i, item_raw in enumerate(items_raw, 1):
@@ -114,13 +113,30 @@ for i, item_raw in enumerate(items_raw, 1):
         if pdf_tmp_path and pdf_tmp_path.exists():
             pdf_tmp_path.unlink()
 
-        # Update result file every 25 items.
+        # Overwrite result json every 25 items to persist results.
         if i % 25 == 0:
-            logger.info(f"Persist result to {out_file.absolute()}")
-            gu.write_json(result_dict, out_file)
+            logger.info(f"Persist result to {result_json.absolute()}")
+            gu.write_json(result_dict, result_json)
 
 # Persist result as json file.
-logger.info(f"Persist result to {out_file.absolute()}")
-gu.write_json(result_dict, out_file)
+logger.info(f"Persist result to {result_json.absolute()}")
+gu.write_json(result_dict, result_json)
+
+# Prepare static files for frontend.
+logger.info(
+    f"Prepare slim version of result json without full pdf text and copy together with static files to {frontend_directory.absolute()}"
+)
+result_dict_slim = {
+    "processed_asof": result_dict["processed_asof"],
+    "version": result_dict["version"],
+    "data": [
+        {k: v for k, v in item_dict.items() if k is not "pdf_text"}
+        for item_dict in result_dict["data"]
+    ],
+}
+gu.write_json(result_dict_slim, frontend_directory / "items_slim.json")
+shutil.copytree(
+    Path("./static_website_templares"), frontend_directory, dirs_exist_ok=True
+)
 
 logger.info("Done.")

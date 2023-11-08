@@ -76,7 +76,6 @@ def enrich_item_from_detail_page(item_raw: dict) -> dict:
     - author: Item author.
     - pdf_url: Url to pdf file.
     - pdf_id: Pdf id.
-    - related_items: List of related items' ids and urls.
 
     Args:
         item_raw (dict): A scrapped raw item.
