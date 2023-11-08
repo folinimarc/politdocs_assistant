@@ -17,12 +17,13 @@ out_file = data_directory / "items.json"
 pdf_tmp_directory = data_directory / "pdf"
 
 # Setup
-logger = get_default_logger("politdocs", data_directory)
+logger = gu.get_default_file_and_stream_logger("politdocs", data_directory)
 logger.info(
     f"Creating data directory {data_directory.absolute()} and pdf tmp directory {pdf_tmp_directory.absolute()}."
 )
-create_directory(data_directory, purge=False)
-create_directory(pdf_tmp_directory, purge=True)
+gu.create_directory(data_directory, purge=False)
+gu.create_directory(pdf_tmp_directory, purge=True)
+gu.create_directory(frontend_directory, purge=True)
 result_dict = {
     "processed_asof": datetime.datetime.now().strftime("%Y-%m-%d"),
     "version": os.getenv(
