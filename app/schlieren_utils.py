@@ -43,12 +43,18 @@ def add_response_links_inplace(items):
     Try to detect these relationships using fuzzy matching of titles
     and add links to responses to each affected item.
     This happens in-place.
+
+    Criteria for a link is a high similarity in the titles.
+    We ignore titles which contain "gemeindeparlament" because these are
+    protocol items and not responses.
     """
     for i in items:
         i["related_items"] = []
     for i1 in range(len(items)):
         item1 = items[i1]
         i1_title = item1["title"].lower()
+        if "gemeindeparlament" in i1_title:
+            continue
         for i2 in range(i1 + 1, len(items)):
             item2 = items[i2]
             i2_title = item2["title"].lower()
@@ -98,14 +104,25 @@ def enrich_item_from_detail_page(item_raw: dict) -> dict:
     soup = gu.get_soup(item_url)
 
     # Add author
+    # Ideally we would extract the author from the item detail page's creator (Verfasser) tag.
+    # Otherwise, check if the title contains "vorlage stadtrat" and set author to "Stadtrat".
+    # Otherwise, check if the title contains "gemeindeparlament" together with either "beschluss" or "protokoll" and set author to "Gemeindeparlament".
+    # Use "Unspezifiziert" (unspecified) as fallback.
     author = "Unspezifiziert"
     author_tag = soup.find("dt", string=re.compile("Verfasser"))
+    title_lower = item["title"].lower()
     if author_tag:
         author_tag_a = author_tag.next_sibling.find("a")
         if author_tag_a:
             author = author_tag_a.get_text().strip()
         else:
             author = author_tag.next_sibling.get_text().strip()
+    elif "vorlage stadtrat" in title_lower:
+        author = "Stadtrat"
+    elif "gemeindeparlament" in title_lower and (
+        "beschluss" in title_lower or "protokoll" in title_lower
+    ):
+        author = "Gemeindeparlament"
     item.update({"author": author.title()})
 
     # Get PDF url, which is the href attribut of a download button element.
