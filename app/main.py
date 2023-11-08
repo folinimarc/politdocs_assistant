@@ -51,9 +51,9 @@ prev_run = gu.get_previous_run_json_as_id_dict(out_file)
 
 logger.info(f"Processing {len(items_raw)} items...")
 for i, item_raw in enumerate(items_raw, 1):
-    logger.info(f"Processing item {i}/{len(items_raw)}")
-
     item_raw_id = item_raw["item_id"]
+    logger.info(f"Processing item {i}/{len(items_raw)} (id: {item_raw_id})")
+
     # Check whether the item was already was successfully processed.
     # If so, copy it from previous run and just update the related_items
     # to make sure its up to date. If anything bad happens, log it and continue
@@ -116,12 +116,10 @@ for i, item_raw in enumerate(items_raw, 1):
         # Update result file every 25 items.
         if i % 25 == 0:
             logger.info(f"Persist result to {out_file.absolute()}")
-            with open(out_file, "w") as f:
-                json.dump(result_dict, f, indent=4)
+            gu.write_json(result_dict, out_file)
 
 # Persist result as json file.
 logger.info(f"Persist result to {out_file.absolute()}")
-with open(out_file, "w") as f:
-    json.dump(result_dict, f, indent=4)
+gu.write_json(result_dict, out_file)
 
 logger.info("Done.")

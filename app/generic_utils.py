@@ -13,6 +13,19 @@ from openai import OpenAI
 import random
 
 
+def read_json(path):
+    """Read and parse json file"""
+    with open(path, "r") as f:
+        data = json.loads(f.read())
+    return data
+
+
+def write_json(data, path):
+    """Write json file"""
+    with open(path, "w") as f:
+        f.write(json.dumps(data, indent=4))
+
+
 def with_retry(max_retries=5, retry_wait=3):
     """Decorator that retries a function call a specified number of times"""
 
@@ -76,8 +89,7 @@ def get_previous_run_json_as_id_dict(file: Path) -> dict:
     Returns empty dict if no file exists.
     """
     try:
-        with open(file, "r") as f:
-            result_json = json.load(f)
+        result_json = read_json(file)
         # The result json has some top level metadata which is not of interest.
         # We only want the data array, which contains a list of item dicts.
         return {i["item_id"]: i for i in result_json["data"]}
