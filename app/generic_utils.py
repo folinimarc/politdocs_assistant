@@ -247,6 +247,7 @@ def create_pdf_summary(pdf_url: str, pdf_tmp_directory: Path) -> str:
 
 
 def ocr_pdf_german_inplace(pdf_path: Path):
+    tmp_pdf_path_aux = None
     try:
         # Perform OCR on PDF file:
         # Firstly, rewrite file with ghostscript, because it seems to decrease errors when using ocrmypdf:
@@ -268,5 +269,5 @@ def ocr_pdf_german_inplace(pdf_path: Path):
         pass
     finally:
         # Remove temporary file in any case if exists.
-        if os.path.exists(tmp_pdf_path_aux):
-            os.remove(tmp_pdf_path_aux)
+        if tmp_pdf_path_aux and tmp_pdf_path_aux.exists():
+            tmp_pdf_path_aux.unlink()
