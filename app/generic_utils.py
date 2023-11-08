@@ -205,7 +205,7 @@ def summarize_text(text, max_attempts=5):
             # There are many things that can go wrong here, some of them are our fault (too many tokens), but
             # openai has also been wonky due to server overload. Therefore, we need some retry logic here.
             # We distinguish between openai errors and non-openai errors. In most cases we just sleep and retry,
-            # following a kinda exponential backoff, for 6 attempts: 4, 8, 16, 32, 64, 128s with minimal randomness.
+            # following a kinda exponential backoff, example for 6 attempts: 4, 8, 16, 32, 64, 128s with minimal randomness.
             # In case of too many input tokens, we recursively split the text and
             # summarize each part, which in case is then summarized again.
             if attempt > max_attempts:

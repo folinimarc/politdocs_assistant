@@ -54,10 +54,10 @@ for i, item_raw in enumerate(items_raw, 1):
     item_raw_id = item_raw["item_id"]
     logger.info(f"Processing item {i}/{len(items_raw)} (id: {item_raw_id})")
 
-    # Check whether the item was already was successfully processed.
+    # Check whether the item was already successfully processed.
     # If so, copy it from previous run and just update the related_items
     # to make sure its up to date. If anything bad happens, log it and continue
-    # as if no previous run exists.
+    # as if no previous run existed.
     try:
         if prev_run.get(item_raw_id, {}).get("status") == "OK":
             item = prev_run[item_raw_id]
